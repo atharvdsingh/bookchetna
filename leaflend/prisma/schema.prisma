@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//////////////////////////////
+// NextAuth required models //
+//////////////////////////////
+
+model users {
+  id       Int     @id @default(autoincrement())
+  name     String?
+  email    String  @unique
+  password String?
+
+  booksHave booksHave[]
+
+  sentRequests     RentalRequest[] @relation("Requester")
+  receivedRequests RentalRequest[] @relation("Owner")
+
+  borrowedBooks borrows[] @relation("Borrower")
+  givenBooks    borrows[] @relation("Owner")
+}
+
+model booksHave {
+  id Int @id @default(autoincrement())
+
+  bookname    String
+  cover       String?
+  publishDate DateTime @default(now())
+  bookType    BookType @default(AllGenres)
+  author String ?
+  price Int ?
+
+  ownerId Int
+  owner users @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  status BookStatus @default(AVAILABLE)
+  visibilityStatus visibilityStatusEnum @default(SHOW)
+
+  rentalRequests RentalRequest[]
+  borrows        borrows[]
+}
+
+model RentalRequest {
+  id Int @id @default(autoincrement())
+
+  bookId Int
+  book booksHave @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  requesterId Int
+  requester users @relation("Requester", fields: [requesterId], references: [id], onDelete: Cascade)
+
+  ownerId Int
+  owner users @relation("Owner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  status         rentalRequestEnum @default(PENDING)
+  requestMessage String?
+
+  createdAt DateTime @default(now())
+  @@unique([bookId,requesterId])
+}
+
+model borrows {
+  id Int @id @default(autoincrement())
+
+  bookId Int
+  book booksHave @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  borrowerId Int
+  borrower users @relation("Borrower", fields: [borrowerId], references: [id], onDelete: Cascade)
+
+  ownerId Int
+  owner users @relation("Owner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  startDate  DateTime  @default(now())
+  dueDate    DateTime?
+  returnDate DateTime?
+
+  status BorrowStatus @default(ACTIVE)
+}
+
+enum BookType {
+  AllGenres
+  Fiction
+  Classic
+  Contemporary
+  Mystery
+  Sci_Fi
+  Fantasy
+  Non_Fiction
+}
+
+enum BookStatus {
+  AVAILABLE
+  RESERVED
+  BORROWED
+}
+enum visibilityStatusEnum {
+  HIDE
+  SHOW
+}
+
+enum BorrowStatus {
+  ACTIVE
+  RETURNED
+  OVERDUE
+}
+
+enum rentalRequestEnum {
+  PENDING
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
