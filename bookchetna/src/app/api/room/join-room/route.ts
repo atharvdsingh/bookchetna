@@ -5,13 +5,15 @@ import { getServerSession } from "next-auth";
 import { NextResponse, type NextRequest } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/route";
 
-export default async function  POST(req:NextRequest){
+export  async function  POST(req:NextRequest){
     try {
         const body= await req.json()
         const session=await getServerSession(authOptions)
         if(!session?.user.id){
             throw new AppError("Envalied session",400)
+
         }
+        console.log("......................................................",body.roomId)
         if(!body.roomId){
             throw new AppError("room id is missing",402)
         }
@@ -31,7 +33,7 @@ export default async function  POST(req:NextRequest){
         })
         
     } catch (error) {
-        handleApiError(error)
+       return handleApiError(error)
         
     }
 

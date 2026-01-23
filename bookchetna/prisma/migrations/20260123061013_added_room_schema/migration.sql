@@ -36,3 +36,5 @@ ALTER TABLE "RoomMembership" ADD CONSTRAINT "RoomMembership_roomId_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "RoomMembership" ADD CONSTRAINT "RoomMembership_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+ALTER SEQUENCE "room_id_seq" RESTART WITH 100000;

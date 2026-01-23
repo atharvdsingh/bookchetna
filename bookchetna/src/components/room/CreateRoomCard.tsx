@@ -1,4 +1,5 @@
-import React from "react";
+"use client"
+import React, { useState, type ReactEventHandler } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,8 +15,37 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
+import { toast } from "sonner";
+import { api } from "@/lib/axios";
+import { handleClientError } from "@/util/clientError";
+import { useRouter } from "next/navigation";
 
 function CreateRoomCard() {
+    const [name,setName]=useState <string> ("")
+    const [discription,setDiscription]=useState <string> ("")
+    const router=useRouter()
+
+    async function handleSubmit(){
+        try {
+            if(name.length <5){
+                return toast.error("Room name is required More then 5 words")
+            }
+            const body=await api.post("/room/create-room",{
+                roomName:name,
+                discription:discription
+            })
+            if(body.status!=200){
+                toast.error("Something Went Wrong")
+            }
+            toast.success("Room created successfully")
+                router.push("./home/page=1/")
+            
+            
+        } catch (error) {
+            handleClientError(error)
+        }
+    }
+
   return (
     <>
       <Dialog  >
@@ -45,14 +75,15 @@ function CreateRoomCard() {
             <div className="grid gap-4">
               <div className="grid gap-3">
                 <Label htmlFor="name-1">Room Name</Label>
-                <Input id="name-1" name="name" defaultValue="eg. hostelclub " />
+                <Input id="name-1" onChange={(e)=>setName(e.target.value)}  name="room-name" defaultValue="eg. hostelclub " />
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="username-1">Discription</Label>
                 <Input
-                  id="username-1"
-                  name="username"
+                  id="discripttion"
+                  name="discription"
                   defaultValue="eg. book renting for hostels name"
+                  onChange={(e)=>setDiscription(e.target.value)}
                 />
               </div>
             </div>
@@ -60,7 +91,7 @@ function CreateRoomCard() {
               <DialogClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <Button type="submit">Create Room <Plus/> </Button>
+              <Button onClick={handleSubmit} type="submit">Create Room <Plus/> </Button>
             </DialogFooter>
           </DialogContent>
         </form>

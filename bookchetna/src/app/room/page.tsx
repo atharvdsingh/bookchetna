@@ -5,7 +5,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import CreateRoomCard from "@/components/room/CreateRoomCard";
 import JoinRoomCard from "@/components/room/JoinRoomCard";
-import { Users } from "lucide-react";
+import { Home, Users } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import PublicRoomCard from "@/components/room/PublicRoomCard";
 
 async function Page() {
   const session = await getServerSession(authOptions);
@@ -16,7 +19,12 @@ async function Page() {
 
   return (
     <>
+    
       <CenterComponent className="min-h-screen" >
+        <Button asChild className="fixed top-3 left-3   transition-all duration-300  " >
+
+        <Link href={"./"} className=" flex  " > <Home/> Home </Link>
+        </Button>
         <div className="flex flex-col justify-evenly min-h-screen items-center" >
 
         <div>
@@ -34,6 +42,7 @@ async function Page() {
         <div className="flex flex-wrap  justify-center items-center gap-5">
           <CreateRoomCard />
           <JoinRoomCard />
+          <PublicRoomCard/>
         </div>
         </div>
       </CenterComponent>

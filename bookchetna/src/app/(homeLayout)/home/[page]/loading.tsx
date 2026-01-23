@@ -6,8 +6,8 @@ interface Props {}
 
 function Loading(props: Props) {
     const {} = props
-    const a:Number=8;
-   let b:Number
+    const a:number=8;
+   let b:number
 
     return (
 

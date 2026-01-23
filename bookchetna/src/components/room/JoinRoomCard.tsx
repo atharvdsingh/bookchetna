@@ -1,4 +1,5 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 
 import { Button } from "@/components/ui/button"
 import {
@@ -14,10 +15,39 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { FolderSymlink, Plus } from 'lucide-react'
+import { handleClientError } from '@/util/clientError'
+import { toast } from 'sonner'
+import { api } from '@/lib/axios'
+import { useRouter } from 'next/navigation'
 
 
 
 function JoinRoomCard() {
+    const [id,setId]=useState<number>()
+    const router=useRouter()
+    const handleClick=async ()=>{
+        try {
+            console.log(id?.toString.length)
+            if(!id){
+                return toast.error("Room id is required")
+            }
+            if(id! <100000 || id >999999 ){
+                return toast.error("We only support 6 (six) digit number ")
+            }
+            const respons=await api.post("/room/join-room",{
+                roomId:id
+            })
+            if(respons.status!=200){
+                return toast.error("something went wront")
+            }
+            toast.success(respons.data.message)
+            router.push("/home")
+
+            
+        } catch (error) {
+            handleClientError(error)
+        }
+    }
     
 
     return (
@@ -48,7 +78,7 @@ function JoinRoomCard() {
           <div className="grid gap-4">
             <div className="grid gap-3">
               <Label htmlFor="name-1">Invite Code</Label>
-              <Input id="name-1" name="name" type="number" defaultValue="Enter 6-digit code" />
+              <Input onChange={(e)=>setId(Number(e.target.value))} id="name-1" name="name" type="number" defaultValue="Enter 6-digit code" />
             </div>
             {/* <div className="grid gap-3">
               <Label htmlFor="username-1">Username</Label>
@@ -59,7 +89,7 @@ function JoinRoomCard() {
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit">Join</Button>
+            <Button onClick={handleClick} type="submit">Join</Button>
           </DialogFooter>
         </DialogContent>
       </form>
