@@ -21,10 +21,7 @@ async function Page() {
     <>
     
       <CenterComponent className="min-h-screen" >
-        <Button asChild className="fixed top-3 left-3   transition-all duration-300  " >
 
-        <Link href={"./"} className=" flex  " > <Home/> Home </Link>
-        </Button>
         <div className="flex flex-col justify-evenly min-h-screen items-center" >
 
         <div>

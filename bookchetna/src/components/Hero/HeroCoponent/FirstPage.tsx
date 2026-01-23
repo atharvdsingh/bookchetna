@@ -5,9 +5,8 @@ import Image from "next/image";
 import ManagingDiffrentButton from "./ManagingDiffrentButton";
 import React from "react";
 
-interface Props {}
 
-async function FirstPage(props: Props) {
+async function FirstPage() {
   
   const session = await GetTheSession();
 

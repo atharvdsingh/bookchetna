@@ -1,9 +1,7 @@
 import React from 'react'
 
-interface Props {}
 
-function Loading(props: Props) {
-    const {} = props
+function Loading() {
 
     return (
         <></>
