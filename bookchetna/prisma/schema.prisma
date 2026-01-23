@@ -24,6 +24,7 @@ model users {
 
   borrowedBooks borrows[] @relation("Borrower")
   givenBooks    borrows[] @relation("Owner")
+  joinedRoom RoomMembership[]
 }
 
 model booksHave {
@@ -41,7 +42,7 @@ model booksHave {
 
   status BookStatus @default(AVAILABLE)
   visibilityStatus visibilityStatusEnum @default(SHOW)
-
+  
   rentalRequests RentalRequest[]
   borrows        borrows[]
 }
@@ -84,6 +85,24 @@ model borrows {
   status BorrowStatus @default(ACTIVE)
 }
 
+model room {
+  id Int @id @default(autoincrement())
+  roomName String @unique
+  discription String ?
+  members RoomMembership[]
+}
+
+model RoomMembership {
+  id Int @id @default(autoincrement())
+  memberId Int
+  roomId Int
+  room room @relation(fields: [roomId],references: [id])
+  member users @relation(fields: [memberId],references: [id])
+  status MembershipStatus @default(ACTIVE)
+  roomRole RoomRole @default(MEMBER)
+  @@unique([memberId,roomId])
+}
+
 enum BookType {
   AllGenres
   Fiction
@@ -116,4 +135,15 @@ enum rentalRequestEnum {
   ACCEPTED
   REJECTED
   EXPIRED
+}
+
+enum RoomRole {
+  ADMIN
+  MEMBER
+}
+
+enum MembershipStatus {
+  ACTIVE
+  LEFT
+  BANNED
 }

@@ -44,7 +44,8 @@ function ManagingDiffrentButton(props: Props) {
         <div className="flex gap-5">
           <Button asChild className="flex  ">
             <div>
-              <Link href={"/home/page=1"}>Get Started</Link>
+              {/* <Link href={"/home/page=1"}>Get Started</Link> */}
+              <Link href={"/room"}>Get Started</Link>
 
               <ArrowRight />
             </div>
