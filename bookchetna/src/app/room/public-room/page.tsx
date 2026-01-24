@@ -6,6 +6,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import AllPublicRoomCard from "@/components/room/publicRoom/AllPublicRoomCard";
 import { prisma } from "@/util/Prisma";
 import type { Prisma } from "@prisma/client";
+import PublickRoomWrapper from "@/components/room/publicRoom/PublickRoomWrapper";
 
 export type roomTypeForCardWithName = Prisma.roomGetPayload<{
   include: {
@@ -27,6 +28,12 @@ async function Page() {
     where: {
       visibility: "SHOW",
     },
+    take:8
+    ,
+    orderBy:{
+      id:"desc"
+    }
+    ,
     include: {
       members: {
         include: {
@@ -38,7 +45,7 @@ async function Page() {
         },
       },
     },
-  });
+  },);
   console.log(rooms);
   if (!session?.user.id) {
     redirect("./");
@@ -48,11 +55,7 @@ async function Page() {
     <>
       <CenterComponent className="">
         <div className="max-w-7xl m-auto">
-          <div className="flex gap-3 mt-20 mx-4 flex-col ">
-            {rooms.map((room) => (
-              <AllPublicRoomCard key={room.id} room={room} />
-            ))}
-          </div>
+          <PublickRoomWrapper rooms={rooms} />
         </div>
       </CenterComponent>
     </>

@@ -16,13 +16,13 @@ export async function POST(req: NextRequest) {
     }
 
     const respons = await prisma.$transaction(async (tx) => {
-      const respons = await prisma.room.create({
+      const respons = await tx.room.create({
         data: {
           roomName: body.roomName,
           discription: body.discription!,
         },
       });
-      await prisma.roomMembership.create({
+      await tx.roomMembership.create({
         data: {
           memberId: session.user.id,
           roomId: respons.id,
