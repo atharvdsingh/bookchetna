@@ -1,7 +1,7 @@
-import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export default function RoomCardSkeleton() {
+export default function AllPublicRoomCardSkeleton() {
   return (
     <Card className="border-primary/50 p-4">
       <div className="flex items-center justify-between gap-4">

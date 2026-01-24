@@ -22,9 +22,9 @@ model users {
   sentRequests     RentalRequest[] @relation("Requester")
   receivedRequests RentalRequest[] @relation("Owner")
 
-  borrowedBooks borrows[] @relation("Borrower")
-  givenBooks    borrows[] @relation("Owner")
-  joinedRoom RoomMembership[]
+  borrowedBooks borrows[]        @relation("Borrower")
+  givenBooks    borrows[]        @relation("Owner")
+  joinedRoom    RoomMembership[]
 }
 
 model booksHave {
@@ -34,15 +34,15 @@ model booksHave {
   cover       String?
   publishDate DateTime @default(now())
   bookType    BookType @default(AllGenres)
-  author String ?
-  price Int ?
+  author      String?
+  price       Int?
 
   ownerId Int
-  owner users @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  owner   users @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-  status BookStatus @default(AVAILABLE)
+  status           BookStatus           @default(AVAILABLE)
   visibilityStatus visibilityStatusEnum @default(SHOW)
-  
+
   rentalRequests RentalRequest[]
   borrows        borrows[]
 }
@@ -51,32 +51,33 @@ model RentalRequest {
   id Int @id @default(autoincrement())
 
   bookId Int
-  book booksHave @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  book   booksHave @relation(fields: [bookId], references: [id], onDelete: Cascade)
 
   requesterId Int
-  requester users @relation("Requester", fields: [requesterId], references: [id], onDelete: Cascade)
+  requester   users @relation("Requester", fields: [requesterId], references: [id], onDelete: Cascade)
 
   ownerId Int
-  owner users @relation("Owner", fields: [ownerId], references: [id], onDelete: Cascade)
+  owner   users @relation("Owner", fields: [ownerId], references: [id], onDelete: Cascade)
 
   status         rentalRequestEnum @default(PENDING)
   requestMessage String?
 
   createdAt DateTime @default(now())
-  @@unique([bookId,requesterId])
+
+  @@unique([bookId, requesterId])
 }
 
 model borrows {
   id Int @id @default(autoincrement())
 
   bookId Int
-  book booksHave @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  book   booksHave @relation(fields: [bookId], references: [id], onDelete: Cascade)
 
   borrowerId Int
-  borrower users @relation("Borrower", fields: [borrowerId], references: [id], onDelete: Cascade)
+  borrower   users @relation("Borrower", fields: [borrowerId], references: [id], onDelete: Cascade)
 
   ownerId Int
-  owner users @relation("Owner", fields: [ownerId], references: [id], onDelete: Cascade)
+  owner   users @relation("Owner", fields: [ownerId], references: [id], onDelete: Cascade)
 
   startDate  DateTime  @default(now())
   dueDate    DateTime?
@@ -86,22 +87,23 @@ model borrows {
 }
 
 model room {
-  id Int @id @default(autoincrement())
-  roomName String @unique
-  discription String ?
+  id          Int                  @id @default(autoincrement())
+  roomName    String               @unique
+  discription String?
+  visibility  visibilityStatusEnum @default(SHOW)
   members RoomMembership[]
 }
 
 model RoomMembership {
-  id Int @id @default(autoincrement())
+  id       Int              @id @default(autoincrement())
   memberId Int
-  roomId Int
-  room room @relation(fields: [roomId],references: [id])
-  member users @relation(fields: [memberId],references: [id])
-  visibility visibilityStatusEnum @default(SHOW)
-  status MembershipStatus @default(ACTIVE)
-  roomRole RoomRole @default(MEMBER)
-  @@unique([memberId,roomId])
+  roomId   Int
+  room     room             @relation(fields: [roomId], references: [id])
+  member   users            @relation(fields: [memberId], references: [id])
+  status   MembershipStatus @default(ACTIVE)
+  roomRole RoomRole         @default(MEMBER)
+
+  @@unique([memberId, roomId])
 }
 
 enum BookType {
@@ -120,6 +122,7 @@ enum BookStatus {
   RESERVED
   BORROWED
 }
+
 enum visibilityStatusEnum {
   HIDE
   SHOW

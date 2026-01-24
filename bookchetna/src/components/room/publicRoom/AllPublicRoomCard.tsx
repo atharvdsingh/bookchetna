@@ -1,23 +1,22 @@
-import { Users, LogIn, User } from "lucide-react";
+import { Users, LogIn } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
+import type { roomTypeForCardWithName } from "@/app/room/public-room/page";
 
-type RoomCardProps = {
-  roomName: string;
-  creator: string;
-  membersCount: number;
-  joined?: boolean;
-  roomId: number;
+
+
+type Props = {
+  room: roomTypeForCardWithName;
 };
 
-export default function AllPublicRoomCard({
-  roomName ="athar" ,
-  creator="atharv",
-  membersCount=30,
-  joined = false,
-  roomId=325248,
-}: RoomCardProps) {
+export default function AllPublicRoomCard({ room }: Props) {
+  const membersCount = room.members.length;
+
+  const admin = room.members.find(
+    (m) => m.roomRole === "ADMIN"
+  );
+
   return (
     <Card className="border-primary/50 p-4">
       <div className="flex items-center justify-between gap-4">
@@ -30,40 +29,35 @@ export default function AllPublicRoomCard({
 
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h3 className="line-clamp-1 font-medium">{roomName}</h3>
+              <h3 className="line-clamp-1 font-medium">
+                {room.roomName}
+              </h3>
 
-              {joined && (
-                <Badge variant="secondary" className="text-xs">
-                  Joined
-                </Badge>
-              )}
+              <Badge variant="secondary" className="text-xs">
+                Joined
+              </Badge>
             </div>
 
             <p className="text-sm text-muted-foreground">
-              Created by {creator}
+              Created by {admin?.member.name ?? "Unknown"}
             </p>
           </div>
         </div>
 
         {/* RIGHT */}
         <div className="flex items-center gap-3 shrink-0">
-          <Badge variant="secondary" className="text-xs">
-            {membersCount} <p className="hidden md:block" >
-               members 
-              </p>
-              <Users/>
+          <Badge variant="secondary" className="text-xs flex items-center gap-1">
+            {membersCount}
+            <span className="hidden md:block">members</span>
+            <Users className="w-3 h-3" />
           </Badge>
 
-          {/* Server-safe navigation */}
           <Link
-            href={`/room/${roomId}`}
+            href={`/room/${room.id}`}
             className="inline-flex items-center gap-2 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-8 px-3 rounded-md"
           >
             <LogIn className="w-4 h-4" />
-            <p className="hidden md:flex" >
-
-            Enter
-            </p>
+            <span className="hidden md:flex">Enter</span>
           </Link>
         </div>
 

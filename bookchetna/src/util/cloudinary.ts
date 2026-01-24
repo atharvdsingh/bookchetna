@@ -11,21 +11,20 @@ export default cloudinary;
 
 export class cloudinaryServies {
   private static cloudinaryInstance: cloudinaryServies;
-  static getCloudinaryInstace(){
-    if(this.cloudinaryInstance){
-      return this.cloudinaryInstance
-    }else{
-      this.cloudinaryInstance=new cloudinaryServies
-      return this.cloudinaryInstance
+  static getCloudinaryInstace() {
+    if (this.cloudinaryInstance) {
+      return this.cloudinaryInstance;
+    } else {
+      this.cloudinaryInstance = new cloudinaryServies();
+      return this.cloudinaryInstance;
     }
   }
   private constructor() {}
-  async uploadImage(file:File) {
+  async uploadImage(file: File) {
     try {
-      
       const byte = await file.arrayBuffer();
       const buffer = await Buffer.from(byte);
-      const result:UploadApiResponse = await new Promise  ((resolve, reject) => {
+      const result: UploadApiResponse = await new Promise((resolve, reject) => {
         cloudinary.uploader
           .upload_stream(
             {
@@ -34,16 +33,15 @@ export class cloudinaryServies {
             },
             (error, result) => {
               if (error) reject(error);
-              resolve(result as UploadApiResponse );
-            }
+              resolve(result as UploadApiResponse);
+            },
           )
           .end(buffer);
-        });
-        console.log(result)
-        return result
-  
+      });
+      console.log(result);
+      return result;
     } catch (error) {
-      return error
-      
-    }  }
+      return error;
+    }
+  }
 }
