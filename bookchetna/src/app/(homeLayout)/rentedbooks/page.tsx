@@ -10,14 +10,24 @@ import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-async function Page() {
+async function Page({
+  searchParams,
+}: {
+  searchParams: { room?: string }
+}) {
   const session = await getServerSession(authOptions);
   if (!session?.user.id) {
     redirect("/");
   }
+
+  const roomId = searchParams?.room ? Number(searchParams.room) : undefined;
+
   const books: RentalRequestCartType[] = await prisma.rentalRequest.findMany({
     where: {
       requesterId: session?.user.id,
+      ...(roomId && {
+        book: { room: { some: { roomId: roomId } } }
+      })
     },
     include: {
       book: {

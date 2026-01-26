@@ -29,6 +29,7 @@ import { toast } from "sonner"; // optional (if you use Shadcn toast)
 import { $Enums, BookType } from "@prisma/client";
 import z, { object } from "zod";
 import { api } from "@/lib/axios";
+import { useSearchParams } from "next/navigation";
 
 export interface PostBookFormData {
   title: string;
@@ -46,14 +47,17 @@ interface ErrorType {
 export default function CreateBook() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit,formState, control,setValue } = useForm<createBookType>({
+  const searchParams = useSearchParams();
+  const roomId = searchParams.get("room");
+
+  const { register, handleSubmit, formState, control, setValue } = useForm<createBookType>({
     resolver: zodResolver(createBookSchema),
     defaultValues: {
       bookType: "AllGenres",
 
     },
   });
-console.log(formState.errors)
+  console.log(formState.errors)
   // ... inside component ...
 
   // ... inside component ...
@@ -65,6 +69,11 @@ console.log(formState.errors)
     console.log("hello world");
     try {
       const formdata = buildBookFormData(data);
+
+      // Include roomId if present in URL
+      if (roomId) {
+        formdata.append("roomId", roomId);
+      }
       //      title: string;
       // author: string;
       // genre: string;
@@ -76,7 +85,7 @@ console.log(formState.errors)
         "/mybooks",
         formdata
       );
-      if(res.status==200){
+      if (res.status == 200) {
 
         toast.success("Book posted successfully!");
         setOpen(false);
@@ -160,14 +169,14 @@ console.log(formState.errors)
                   required
                 /> */}
                 <Input
-  type="file"
-  onChange={(e) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setValue("cover",file)
-    }
-  }}
-/>
+                  type="file"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) {
+                      setValue("cover", file)
+                    }
+                  }}
+                />
                 <Paperclip className="relative right-10 " />
               </div>
               <p className="text-sm text-muted-foreground">
@@ -204,7 +213,7 @@ export function buildBookFormData(data: createBookType) {
   fd.append("description", data.description!);
   fd.append("price", pricne);
   fd.append("bookType", data.bookType);
-  fd.append("cover", data.cover );
+  fd.append("cover", data.cover);
 
   return fd;
 }

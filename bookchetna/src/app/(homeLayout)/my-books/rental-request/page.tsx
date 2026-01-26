@@ -7,15 +7,25 @@ import { prisma } from "@/util/Prisma";
 import { MessageCircleOff } from "lucide-react";
 import { redirect } from "next/navigation";
 
-async function Page() {
+async function Page({
+  searchParams,
+}: {
+  searchParams: { room?: string }
+}) {
   const session = await GetTheSession();
   if (!session?.user.id) {
     redirect("/");
   }
+
+  const roomId = searchParams?.room ? Number(searchParams.room) : undefined;
+
   const books: RequestedBooksForApprovel[] =
     await prisma.rentalRequest.findMany({
       where: {
         ownerId: session.user.id,
+        ...(roomId && {
+          book: { room: { some: { roomId: roomId } } }
+        })
       },
       include: {
         book: {

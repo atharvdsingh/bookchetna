@@ -41,15 +41,33 @@ export async function POST(req: NextRequest) {
     await prisma.$transaction(async (tx) => {
       for (const books of booksId) {
 
-        const bookFromDatabase: booksHave | null =
+        const bookFromDatabase =
           await tx.booksHave.findUnique({
             where: {
               id: books,
             },
+            include: {
+              room: true
+            }
           });
 
         if (!bookFromDatabase) {
           throw new AppError("Book not Available", 404, "BOOK_NOT_FOUND");
+        }
+
+        // Validate room membership - user must be in the same room as the book
+        const bookRoomIds = bookFromDatabase.room.map(r => r.roomId);
+        if (bookRoomIds.length > 0) {
+          const userMembership = await tx.roomMembership.findFirst({
+            where: {
+              memberId: session.user.id,
+              roomId: { in: bookRoomIds },
+              status: "ACTIVE"
+            }
+          });
+          if (!userMembership) {
+            throw new AppError("You must join the room to rent this book", 403, "NOT_ROOM_MEMBER");
+          }
         }
 
         if (bookFromDatabase.status != "AVAILABLE") {
@@ -79,17 +97,17 @@ export async function POST(req: NextRequest) {
           },
         });
         tx.booksHave.update({
-          where:{
-            id:bookFromDatabase.id
+          where: {
+            id: bookFromDatabase.id
           },
-        data:{
-          status:"RESERVED"
-        }
-          
+          data: {
+            status: "RESERVED"
+          }
+
         })
       }
 
-    
+
 
       return true;
     });
@@ -110,56 +128,56 @@ export async function POST(req: NextRequest) {
 }
 
 
-export async function PUT(request:NextRequest){
+export async function PUT(request: NextRequest) {
 
   try {
-    const session= await GetTheSession()
-    if(!session?.user.id){
-      throw new AppError("not authenticated",400)
+    const session = await GetTheSession()
+    if (!session?.user.id) {
+      throw new AppError("not authenticated", 400)
     }
 
-    const body:{
-      id:number
-    }=await request.json()
+    const body: {
+      id: number
+    } = await request.json()
     console.log(body)
 
-    const res=await prisma.$transaction(async(tx)=>{
-      const res= await tx.rentalRequest.update({
-        where:{
-          id:body.id
-        },data:{
-          status:"ACCEPTED"
+    const res = await prisma.$transaction(async (tx) => {
+      const res = await tx.rentalRequest.update({
+        where: {
+          id: body.id
+        }, data: {
+          status: "ACCEPTED"
         },
-        
-        
-    
-     
+
+
+
+
       })
       await tx.booksHave.update({
-        where:{
-          id:res.bookId
+        where: {
+          id: res.bookId
         },
-        data:{
-          status:"BORROWED"
+        data: {
+          status: "BORROWED"
         }
       })
-    
-    if(!res){
-      throw new AppError("cound not proceed",500)
-    }
 
-    return res
+      if (!res) {
+        throw new AppError("cound not proceed", 500)
+      }
+
+      return res
     })
-    if(!res){
-      throw new AppError("Something went wrong",500)
+    if (!res) {
+      throw new AppError("Something went wrong", 500)
     }
-    return  NextResponse.json({message:"Book have been given",success:true},{status:200})
+    return NextResponse.json({ message: "Book have been given", success: true }, { status: 200 })
 
-    
+
   } catch (error) {
     console.log(error)
     return handleApiError(error)
-    
+
   }
 
 }

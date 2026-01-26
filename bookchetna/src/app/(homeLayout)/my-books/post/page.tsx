@@ -11,38 +11,50 @@ import { Library } from "lucide-react";
 import { redirect } from "next/navigation";
 import React from "react";
 
-async function Page() {
-  const _id=await GetTheSession()
-  if(!_id){
+async function Page({
+  searchParams,
+}: {
+  searchParams: { room?: string }
+}) {
+  const _id = await GetTheSession()
+  if (!_id) {
     redirect("/")
   }
-  const books:booksHave[]=await prisma.booksHave.findMany({where:{
-      ownerId:_id.user.id
-  }})
 
-  if(books.length===0){
+  const roomId = searchParams?.room ? Number(searchParams.room) : undefined;
+
+  const books: booksHave[] = await prisma.booksHave.findMany({
+    where: {
+      ownerId: _id.user.id,
+      ...(roomId && {
+        room: { some: { roomId: roomId } }
+      })
+    }
+  })
+
+  if (books.length === 0) {
     return <CenterComponent>
-        <div className="flex justify-center flex-col gap-3  items-center">
-          <Library className=" opacity-50 scale-200" />
-          <p className="opacity-50">You haven`&apos;t posted any books yet</p>
+      <div className="flex justify-center flex-col gap-3  items-center">
+        <Library className=" opacity-50 scale-200" />
+        <p className="opacity-50">You haven`&apos;t posted any books yet</p>
 
-          <CreateBook />
-        </div>
-      </CenterComponent>
+        <CreateBook />
+      </div>
+    </CenterComponent>
   }
-  
+
 
 
 
   return (
     <>
- 
-    <div className=" max-w-7xl flex justify-center items-center m-auto p-4  " >
 
-    <MyBooksCard/>
-      </div>      
-     <BookCardWrapper books={books}  />
-     
+      <div className=" max-w-7xl flex justify-center items-center m-auto p-4  " >
+
+        <MyBooksCard />
+      </div>
+      <BookCardWrapper books={books} />
+
     </>
   );
 }

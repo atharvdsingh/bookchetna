@@ -4,17 +4,16 @@ import { Card, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
-import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
-import { useRouter } from "next/router";
 import type { ErrorType } from "@/types/ErrorType";
 import { handleClientError } from "@/util/clientError";
 import { AddToCart, EmptyCart } from "@/store/features/cartSlice";
+import { api } from "@/lib/axios";
 
 
 function Checkout() {
   const [loading, setLoading] = useState(false)
-  const dispatch=useDispatch()
+  const dispatch = useDispatch()
   const NoOfBooks = useSelector((items: RootState) => items.cart);
   const booksId = NoOfBooks.books.map((books) => books.id)
   console.log(booksId)
@@ -24,7 +23,7 @@ function Checkout() {
       console.log("putting the id ")
       console.log(booksId);
 
-      const data = await axios.post("http://localhost:3000/api/rentbook", booksId)
+      const data = await api.post("/rentbook", booksId)
       console.log(data)
       if (data.status != 200) {
         toast.error("something went wrong")
