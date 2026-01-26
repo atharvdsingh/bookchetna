@@ -41,7 +41,7 @@ function JoinRoomCard() {
                 return toast.error("something went wront")
             }
             toast.success(respons.data.message)
-            router.push("/home")
+            router.push(`/home?room=${respons.data.data.id}&page= 1`)
 
             
         } catch (error) {

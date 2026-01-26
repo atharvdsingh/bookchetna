@@ -27,7 +27,8 @@ export  async function  POST(req:NextRequest){
             throw new AppError("something went wrong",500)
         }
         return NextResponse.json({
-            message:"joined room",success:true
+            message:"joined room",success:true,
+            data:respons
         },{
             status:200
         })

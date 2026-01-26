@@ -35,7 +35,7 @@ import { AddToCart } from "@/store/features/cartSlice";
 import type { RootState } from "@/store/store";
 import axios from "axios";
 import { toast } from "sonner";
-import { addNewMyBook, removeMyBook } from "@/store/features/mybookSlice";
+import { addNewMyBook, removeMyBook, visibilityStatusChanged } from "@/store/features/mybookSlice";
 import type { SerializableBook } from "@/types/bookstypeforRedux";
 import { handleClientError } from "@/util/clientError";
 import Image from "next/image";
@@ -85,7 +85,7 @@ export default function MyBooksCard() {
         return toast.error("something went wrong")
       }
       toast.success(res.data.message)
-      dispatch(handleVisibilityStatus(book))
+      dispatch(visibilityStatusChanged(book))
 
       
     } catch (error) {

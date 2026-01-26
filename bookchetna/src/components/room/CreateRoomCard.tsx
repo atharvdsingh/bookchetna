@@ -38,7 +38,7 @@ function CreateRoomCard() {
                 toast.error("Something Went Wrong")
             }
             toast.success("Room created successfully")
-                router.push("./home/page=1/")
+                router.push(`./home?room=${body.data.data.id}&page=1/`)
             
             
         } catch (error) {

@@ -13,14 +13,14 @@ const NUMBER_OF_USERS_TO_FETCH=5
  function PublickRoomWrapper(props: Props) {
     const [rooms,setRoom]=useState<roomTypeForCardWithName[]> (props.rooms)
     const [loading,setLoadig]=useState<boolean>(false)
-    const [offset,setOffset]=useState<number>(7)
+    const [offset,setOffset]=useState<number>(8)
     const {ref,inView}=useInView()
     const loadMOreData=async()=>{
         setLoadig(true)
 
        const sleep = (ms: number) =>
   new Promise<void>((resolve) => setTimeout(resolve, ms));
-       await sleep(3000)
+       await sleep(1000)
 
         
         const newrooms=await fetchPublicRooms(offset,NUMBER_OF_USERS_TO_FETCH)

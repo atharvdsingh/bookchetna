@@ -11,30 +11,53 @@ import { GetTheSession } from "@/util/GetTheSession";
 
 
 async function Page({
-  params,
+  searchParams,
 }: {
-  params: Promise<{ page: string }>
+  searchParams: { page?:number,room?:string }
 }) {  
 
   const session=await GetTheSession()
   
+  
 
-  const {page}=await params
+  const Page= Number(  searchParams?.page ??1)
+   const roomNo =
+    searchParams?.room && !Number.isNaN(Number(searchParams.room))
+      ? Number(searchParams.room)
+      : undefined;
 
-  const PageNumber:number= Number(page.replace("page%3D",""))
     const books: booksHave[] = await prisma.booksHave.findMany({
       where:{
+        
         ownerId:{
+          
           not: session?.user.id
+        },
+        room:{
+          some:{
+            roomId:roomNo
+          }
         }
       },
+    
       
       
-      skip:PageNumber*8-8,
+      skip:Page*8-8,
       take:8
       
     });
-    const totalRow=await prisma.booksHave.count()
+    const totalRow=await prisma.booksHave.count({      where:{
+        
+        ownerId:{
+          
+          not: session?.user.id
+        },
+        room:{
+          some:{
+            roomId:roomNo
+          }
+        }
+      },})
     if (books.length == 0) {
       return (  
         <CenterComponent>
@@ -54,7 +77,7 @@ async function Page({
             ))}
           </div>
         </CenterComponent>
-        <Pagination pageNumber={PageNumber} totalPages={Math.ceil(totalRow/8)} />
+        <Pagination pageNumber={Page} totalPages={Math.ceil(totalRow/8)} />
 
     </>
   );

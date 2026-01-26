@@ -32,7 +32,7 @@ async function Page() {
         },
       },
     },
-  });
+  }) as RentalRequestCartType[]
   if (books.length === 0) {
     return (
       <>

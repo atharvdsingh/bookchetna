@@ -45,6 +45,7 @@ model booksHave {
 
   rentalRequests RentalRequest[]
   borrows        borrows[]
+  room roomAndBook[]
 }
 
 model RentalRequest {
@@ -92,6 +93,7 @@ model room {
   discription String?
   visibility  visibilityStatusEnum @default(SHOW)
   members RoomMembership[]
+  books  roomAndBook[]
 }
 
 model RoomMembership {
@@ -102,8 +104,17 @@ model RoomMembership {
   member   users            @relation(fields: [memberId], references: [id])
   status   MembershipStatus @default(ACTIVE)
   roomRole RoomRole         @default(MEMBER)
-
+  
   @@unique([memberId, roomId])
+}
+
+model roomAndBook {
+  id Int @id @default(autoincrement())
+  bookId Int
+  roomId Int
+  book booksHave @relation(references: [id],fields: [bookId])
+  room room @relation(fields: [roomId],references: [id])
+  @@unique([bookId,roomId])
 }
 
 enum BookType {

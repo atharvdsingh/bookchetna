@@ -2,12 +2,11 @@ import CenterComponent from '@/components/CenterComponent'
 import HomeCardSkeleton from '@/components/Home/HomeCardSkeleton'
 import React from 'react'
 
-interface Props {}
 
-function Loading(props: Props) {
-    const {} = props
-    const a:number=8;
-   let b:number
+
+function Loading() {
+ 
+
 
     return (
 
