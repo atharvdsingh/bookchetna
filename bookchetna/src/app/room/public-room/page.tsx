@@ -27,13 +27,14 @@ async function Page() {
   const rooms: roomTypeForCardWithName[] = await prisma.room.findMany({
     where: {
       visibility: "SHOW",
-    },
-    take:8
-    ,
-    orderBy:{
-      id:"desc"
+      
+   
     }
     ,
+    take: 8,
+    orderBy: {
+      id: "desc",
+    },
     include: {
       members: {
         include: {
@@ -45,7 +46,7 @@ async function Page() {
         },
       },
     },
-  },);
+  });
   console.log(rooms);
   if (!session?.user.id) {
     redirect("./");
@@ -55,7 +56,7 @@ async function Page() {
     <>
       <CenterComponent className="">
         <div className="max-w-7xl m-auto">
-          <PublickRoomWrapper rooms={rooms} />
+          <PublickRoomWrapper userId={session.user.id} rooms={rooms} />
         </div>
       </CenterComponent>
     </>

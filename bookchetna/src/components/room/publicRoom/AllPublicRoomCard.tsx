@@ -3,8 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import type { roomTypeForCardWithName } from "@/app/room/public-room/page";
-
-
+import JoinRoom from "./JoinRoom";
 
 type Props = {
   room: roomTypeForCardWithName;
@@ -13,14 +12,11 @@ type Props = {
 export default function AllPublicRoomCard({ room }: Props) {
   const membersCount = room.members.length;
 
-  const admin = room.members.find(
-    (m) => m.roomRole === "ADMIN"
-  );
+  const admin = room.members.find((m) => m.roomRole === "ADMIN");
 
   return (
     <Card className="border-primary/50 p-4">
       <div className="flex items-center justify-between gap-4">
-
         {/* LEFT */}
         <div className="flex items-center gap-3 min-w-0">
           <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
@@ -29,13 +25,7 @@ export default function AllPublicRoomCard({ room }: Props) {
 
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h3 className="line-clamp-1 font-medium">
-                {room.roomName}
-              </h3>
-
-              <Badge variant="secondary" className="text-xs">
-                Joined
-              </Badge>
+              <h3 className="line-clamp-1 font-medium">{room.roomName}</h3>
             </div>
 
             <p className="text-sm text-muted-foreground">
@@ -46,21 +36,17 @@ export default function AllPublicRoomCard({ room }: Props) {
 
         {/* RIGHT */}
         <div className="flex items-center gap-3 shrink-0">
-          <Badge variant="secondary" className="text-xs flex items-center gap-1">
+          <Badge
+            variant="secondary"
+            className="text-xs flex items-center gap-1"
+          >
             {membersCount}
             <span className="hidden md:block">members</span>
             <Users className="w-3 h-3" />
           </Badge>
 
-          <Link
-            href={`/room/${room.id}`}
-            className="inline-flex items-center gap-2 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-8 px-3 rounded-md"
-          >
-            <LogIn className="w-4 h-4" />
-            <span className="hidden md:flex">Enter</span>
-          </Link>
+          <JoinRoom roomId={room.id} />
         </div>
-
       </div>
     </Card>
   );
