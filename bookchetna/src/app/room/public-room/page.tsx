@@ -27,10 +27,7 @@ async function Page() {
   const rooms: roomTypeForCardWithName[] = await prisma.room.findMany({
     where: {
       visibility: "SHOW",
-      
-   
-    }
-    ,
+    },
     take: 8,
     orderBy: {
       id: "desc",

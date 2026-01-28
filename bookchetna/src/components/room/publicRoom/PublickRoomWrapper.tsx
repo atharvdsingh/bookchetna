@@ -5,6 +5,7 @@ import type { roomTypeForCardWithName } from "@/app/room/public-room/page";
 import { fetchPublicRooms } from "@/actions/fetchAvailableRoomDetails";
 import { useInView } from "react-intersection-observer";
 import AllPublicRoomCardSkeleton from "./SkeletonAllPublicRoomCard";
+import CenterComponent from "@/components/CenterComponent";
 interface Props {
   rooms: roomTypeForCardWithName[];
   userId: number;
@@ -30,6 +31,18 @@ function PublickRoomWrapper(props: Props) {
 
     const newrooms = await fetchPublicRooms(offset, NUMBER_OF_USERS_TO_FETCH);
     const filterrooms=newrooms.filter(rooms=> ! rooms.members.some((member)=>member.memberId===props.userId))
+
+    if(newrooms.length===0){
+        return (
+            <CenterComponent>
+
+                <div className="text-white" >
+            hi there 
+                </div>
+            </CenterComponent>
+        )
+    }
+
     setRoom((rooms) => [...rooms, ...filterrooms]);
     setOffset((offset) => offset + NUMBER_OF_USERS_TO_FETCH);
     setLoadig(false);
