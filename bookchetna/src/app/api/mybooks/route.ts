@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
       price: Number(formdata.get("price")),
       bookType: formdata.get("bookType"),
       cover: formdata.get("cover"),
+      roomId:formdata.get("roomId")
     }
     console.log(rawData)
     const parsedFormData = createBookSchema.parse(rawData)

@@ -214,6 +214,7 @@ export function buildBookFormData(data: createBookType) {
   fd.append("price", pricne);
   fd.append("bookType", data.bookType);
   fd.append("cover", data.cover);
+  fd.append("room",data.roomId)
 
   return fd;
 }

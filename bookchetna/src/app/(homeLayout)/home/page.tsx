@@ -8,58 +8,44 @@ import React from "react";
 import Pagination from "./Pagination";
 import { GetTheSession } from "@/util/GetTheSession";
 
+async function Page({ searchParams }:{searchParams: Promise< {page:string,room:string}>}) {
+  const session = await GetTheSession();
+  
+  console.log(await searchParams,"search params")
+  const Page=Number((await searchParams).page)
+  const roomId=Number((await searchParams).room
+)
 
 
-async function Page({
-  searchParams,
-}: {
-  searchParams: { page?: number, room?: string }
-}) {
-
-  const session = await GetTheSession()
-
-
-
-  const Page = Number(searchParams?.page ?? 1)
-  const roomNo =
-    searchParams?.room && !Number.isNaN(Number(searchParams.room))
-      ? Number(searchParams.room)
-      : undefined;
+  
 
   const books: booksHave[] = await prisma.booksHave.findMany({
     where: {
-
       ownerId: {
-
-        not: session?.user.id
+        not: session?.user.id,
       },
       room: {
         some: {
-          roomId: roomNo
-        }
-      }
+          roomId: roomId,
+        },
+      },
     },
 
-
-
-    skip: Page * 8 - 8,
-    take: 8
-
+    skip: Number((await searchParams).room) * 8 - 8,
+    take: 8,
   });
   const totalRow = await prisma.booksHave.count({
     where: {
-
       ownerId: {
-
-        not: session?.user.id
+        not: session?.user.id,
       },
       room: {
         some: {
-          roomId: roomNo
-        }
-      }
+          roomId: Number((await searchParams).room),
+        },
+      },
     },
-  })
+  });
   if (books.length == 0) {
     return (
       <CenterComponent>
@@ -70,17 +56,20 @@ async function Page({
 
   return (
     <>
-      <CenterComponent className="flex justify-center items-center" >
-        <div className=" grid-cols-1 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 " >
+      <CenterComponent className="flex justify-center items-center">
+        <div className=" grid-cols-1 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 ">
           {books.map((book) => (
-            <div key={book.id} >
+            <div key={book.id}>
               <HomeCard {...book} />
             </div>
           ))}
         </div>
       </CenterComponent>
-      <Pagination pageNumber={Page} totalPages={Math.ceil(totalRow / 8)} roomId={searchParams?.room} />
-
+      <Pagination
+        pageNumber={Page}
+        totalPages={Math.ceil(totalRow / 8)}
+        roomId={roomId.toString()}
+      />
     </>
   );
 }

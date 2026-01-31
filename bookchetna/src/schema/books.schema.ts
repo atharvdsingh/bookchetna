@@ -7,6 +7,8 @@ export const createBookSchema=z.object({
     status:z.string().optional(),
     price:z.number().int().optional(),
     description: z.string().optional(),
+    
+    roomId:z.number(),
     bookType:z.enum(BookType),
     cover:z.instanceof(File,{
         message:"image is missing"

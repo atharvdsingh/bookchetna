@@ -14,14 +14,14 @@ import React from "react";
 async function Page({
   searchParams,
 }: {
-  searchParams: { room?: string }
+  searchParams: Promise <{ room?: string }>
 }) {
   const _id = await GetTheSession()
   if (!_id) {
     redirect("/")
   }
 
-  const roomId = searchParams?.room ? Number(searchParams.room) : undefined;
+  const roomId = Number((await searchParams).room)
 
   const books: booksHave[] = await prisma.booksHave.findMany({
     where: {

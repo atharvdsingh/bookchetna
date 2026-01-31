@@ -6,6 +6,8 @@ import { fetchPublicRooms } from "@/actions/fetchAvailableRoomDetails";
 import { useInView } from "react-intersection-observer";
 import AllPublicRoomCardSkeleton from "./SkeletonAllPublicRoomCard";
 import CenterComponent from "@/components/CenterComponent";
+import NoBooks from "@/components/Home/NoBooks";
+import { House } from "lucide-react";
 interface Props {
   rooms: roomTypeForCardWithName[];
   userId: number;
@@ -25,22 +27,18 @@ function PublickRoomWrapper(props: Props) {
   const loadMOreData = async () => {
     setLoadig(true);
 
-    const sleep = (ms: number) =>
-      new Promise<void>((resolve) => setTimeout(resolve, ms));
-    await sleep(1000);
-
     const newrooms = await fetchPublicRooms(offset, NUMBER_OF_USERS_TO_FETCH);
-    const filterrooms=newrooms.filter(rooms=> ! rooms.members.some((member)=>member.memberId===props.userId))
+    const filterrooms = newrooms.filter(
+      (rooms) =>
+        !rooms.members.some((member) => member.memberId === props.userId),
+    );
 
-    if(newrooms.length===0){
-        return (
-            <CenterComponent>
-
-                <div className="text-white" >
-            hi there 
-                </div>
-            </CenterComponent>
-        )
+    if (newrooms.length === 0) {
+      return (
+        <CenterComponent>
+          <div className="text-white">hi there</div>
+        </CenterComponent>
+      );
     }
 
     setRoom((rooms) => [...rooms, ...filterrooms]);
@@ -52,6 +50,16 @@ function PublickRoomWrapper(props: Props) {
       loadMOreData();
     }
   }, [inView]);
+  if (rooms.length == 0) {
+    return (
+          <div className="flex justify-center min-h-screen items-center">
+            <div className="flex justify-center flex-col gap-3  items-center">
+              <House className=" opacity-50 scale-200" />
+              <p className="opacity-50">No Rooms Available</p>
+            </div>
+          </div>
+    );
+  }
 
   return (
     <>

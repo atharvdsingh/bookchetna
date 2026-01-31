@@ -45,7 +45,7 @@ model booksHave {
 
   rentalRequests RentalRequest[]
   borrows        borrows[]
-  room roomAndBook[]
+  room roomAndBook[] 
 }
 
 model RentalRequest {

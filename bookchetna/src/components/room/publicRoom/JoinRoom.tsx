@@ -28,7 +28,7 @@ function JoinRoom(props: Props) {
         toast.error("something wrong wrong");
       }
       toast.success("joined successfully");
-      router.push(`/home?room=${roomId} &page=1/`);
+      router.push(`/home?room=${roomId}&page=1/`);
     } catch (error) {
       handleClientError(error);
     } finally {
