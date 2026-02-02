@@ -7,6 +7,8 @@ import type { booksHave } from "@prisma/client";
 import React from "react";
 import Pagination from "./Pagination";
 import { GetTheSession } from "@/util/GetTheSession";
+import { toast } from "sonner";
+import { handleClientError } from "@/util/clientError";
 
 async function Page({ searchParams }:{searchParams: Promise< {page:string,room:string}>}) {
   const session = await GetTheSession();
@@ -16,10 +18,10 @@ async function Page({ searchParams }:{searchParams: Promise< {page:string,room:s
   const roomId=Number((await searchParams).room
 )
 
+let books;
 
-  
-
-  const books: booksHave[] = await prisma.booksHave.findMany({
+try {
+     books = await prisma.booksHave.findMany({
     where: {
       ownerId: {
         not: session?.user.id,
@@ -46,6 +48,14 @@ async function Page({ searchParams }:{searchParams: Promise< {page:string,room:s
       },
     },
   });
+  
+} catch (error) {
+  handleClientError(error)
+  
+}
+  
+
+
   if (books.length == 0) {
     return (
       <CenterComponent>

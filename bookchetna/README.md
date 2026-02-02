@@ -1,37 +1,120 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📚 Leaflend
 
-## Getting Started
+**Connect. Share. Read.**  
+A modern peer-to-peer book sharing platform that turns every bookshelf into a community library.
 
-First, run the development server:
+[![Next.js](https://img.shields.io/badge/Next.js-15+-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4+-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-6+-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Redux](https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=redux&logoColor=white)](https://redux-toolkit.js.org/)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🚀 Overview
+
+Leaflend is a social platform designed to facilitate the sharing and renting of physical books within trusted communities. Whether you're a bibliophile looking to declutter or a reader seeking your next favorite title, Leaflend bridges the gap between ownership and access.
+
+### ✨ Key Features
+
+- **📖 Personal Digital Library**: Catalog your physical books and track their availability.
+- **🤝 Peer-to-Peer Rentals**: Send and manage requests to borrow books from other users.
+- **🏠 Community Rooms**: Join or create "Rooms" to share books within specific groups or organizations.
+- **⚡ Real-time Tracking**: Monitor the status of your borrowed and lent books in one place.
+- **🔐 Secure Auth**: Built-in authentication using NextAuth.js.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 15 (App Router), Tailwind CSS 4, Radix UI.
+- **State Management**: Redux Toolkit & React-Redux.
+- **Backend**: Next.js API Routes & Server Actions.
+- **Database**: PostgreSQL with Prisma ORM.
+- **Media**: Cloudinary for book cover management.
+- **Auth**: NextAuth.js.
+
+---
+
+## 🏁 Getting Started
+
+### Prerequisites
+
+- Node.js (v18+)
+- PostgreSQL instance
+- Cloudinary Account (for image uploads)
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/atharvdsingh/bookchetna.git
+   cd bookchetna
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Environment Setup**:
+   Create a `.env` file in the root directory and add the following variables:
+   ```env
+   DATABASE_URL="postgresql://user:password@localhost:5432/leaflend"
+   NEXTAUTH_SECRET="your-secret"
+   NEXTAUTH_URL="http://localhost:3000"
+   CLOUDINARY_CLOUD_NAME="your-cloud-name"
+   CLOUDINARY_API_KEY="your-api-key"
+   CLOUDINARY_API_SECRET="your-api-secret"
+   ```
+
+4. **Database Sync**:
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
+
+5. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## 📁 Project Structure
+
+```text
+src/
+├── app/          # Next.js App Router (Pages & API)
+├── actions/      # Type-safe Server Actions
+├── components/   # Reusable UI components
+├── lib/          # Utilities & Database Client
+├── store/        # Redux store & slices
+├── types/        # TypeScript interfaces
+└── schema/       # Zod validation schemas
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🗺️ Routes Overview
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Pages
+- `/` - Landing page
+- `/home` - Book discovery dashboard
+- `/my-books` - Personal library management
+- `/rentedbooks` - Rented & borrowed tracker
+- `/room` - Community Management
 
-## Learn More
+### API Endpoints
+- `/api/auth` - NextAuth handlers
+- `/api/books` - Book CRUD operations
+- `/api/room` - Room creation and joining
+- `/api/user` - Profile management
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📄 License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project is private and proprietary. All rights reserved.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-"# leaflend" 
