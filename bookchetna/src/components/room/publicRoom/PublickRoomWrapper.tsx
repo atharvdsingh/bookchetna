@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import AllPublicRoomCard from "./AllPublicRoomCard";
-import type { roomTypeForCardWithName } from "@/app/room/public-room/page";
+import type { roomTypeForCardWithName } from "@/types/databaseRoutesType";
 import { fetchPublicRooms } from "@/actions/fetchAvailableRoomDetails";
 import { useInView } from "react-intersection-observer";
 import AllPublicRoomCardSkeleton from "./SkeletonAllPublicRoomCard";
@@ -30,7 +30,7 @@ function PublickRoomWrapper(props: Props) {
     const newrooms = await fetchPublicRooms(offset, NUMBER_OF_USERS_TO_FETCH);
     const filterrooms = newrooms.filter(
       (rooms) =>
-        !rooms.members.some((member) => member.memberId === props.userId),
+        !rooms.members.some((member:any) => member.memberId === props.userId),
     );
 
     if (newrooms.length === 0) {

@@ -2,7 +2,7 @@ import { Users, LogIn } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
-import type { roomTypeForCardWithName } from "@/app/room/public-room/page";
+import type { roomTypeForCardWithName } from "@/types/databaseRoutesType";
 import JoinRoom from "./JoinRoom";
 
 type Props = {

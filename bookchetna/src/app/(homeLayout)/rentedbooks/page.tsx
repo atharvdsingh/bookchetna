@@ -9,17 +9,24 @@ import { BookOpen } from "lucide-react";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import React, { Suspense } from "react";
+import RentedBookList from "@/components/Rental/RentedBookList";
+import RentedBookSkeleton from "@/components/Rental/RentedBookSkeleton";
 
 async function Page({
   searchParams,
 }: {
-  searchParams: { room?: string }
+  searchParams: Promise<{ room?: string }>
 }) {
   const session = await getServerSession(authOptions);
   if (!session?.user.id) {
     redirect("/");
   }
 
+  // ---------------------------------------------------------------------------
+  // OLD CODE (Moved to RentedBookList.tsx for Granular Loading / Suspense)
+  // ---------------------------------------------------------------------------
+  /*
   const roomId = searchParams?.room ? Number(searchParams.room) : undefined;
 
   const books: RentalRequestCartType[] = await prisma.rentalRequest.findMany({
@@ -67,6 +74,13 @@ async function Page({
         ))}
       </div>
     </>
+  );
+  */
+ 
+  // New Route-Level Loading implementation
+  // RentedBookList (Async Component) + loading.tsx
+  return (
+      <RentedBookList searchParams={searchParams} />
   );
 }
 

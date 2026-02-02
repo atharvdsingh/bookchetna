@@ -1,4 +1,5 @@
-import type { roomTypeForCardWithName } from "@/app/room/public-room/page";
+
+import type { roomTypeForCardWithName } from "@/types/databaseRoutesType";   
 import { api } from "@/lib/axios";
 
 export async function fetchPublicRooms(

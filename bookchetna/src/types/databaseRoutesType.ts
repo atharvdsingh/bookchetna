@@ -57,3 +57,19 @@ export enum GENRES {
 interface RentBooksType {
   _id: string;
 }
+
+import { Prisma } from "@prisma/client";
+
+export type roomTypeForCardWithName = Prisma.roomGetPayload<{
+  include: {
+    members: {
+      include: {
+        member: {
+          select: {
+            name: true;
+          };
+        };
+      };
+    };
+  };
+}>;

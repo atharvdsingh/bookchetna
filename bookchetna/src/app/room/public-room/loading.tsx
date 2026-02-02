@@ -1,23 +1,16 @@
-import CenterComponent from "@/components/CenterComponent";
-import AllPublicRoomCardSkeleton from "@/components/room/publicRoom/SkeletonAllPublicRoomCard";
 import React from "react";
+import PublicRoomSkeleton from "@/components/room/publicRoom/PublicRoomSkeleton";
+import CenterComponent from "@/components/CenterComponent";
 
-function Loading() {
+/**
+ * Loading
+ * 
+ * Route-level loading state for /room/public-room.
+ */
+export default function Loading() {
   return (
-    <>
-      <CenterComponent className="">
-        <div className="max-w-7xl m-auto">
-          <div className="flex gap-3 mt-20 mx-4 flex-col ">{
-            
-            Array.from({length:10}).map((_,key)=>(
-                <AllPublicRoomCardSkeleton key={key} />
-            ))
-            
-            }</div>
-        </div>
-      </CenterComponent>
-    </>
+    <CenterComponent>
+      <PublicRoomSkeleton />
+    </CenterComponent>
   );
 }
-
-export default Loading;

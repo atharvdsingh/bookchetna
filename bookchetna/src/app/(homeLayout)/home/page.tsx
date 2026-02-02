@@ -4,24 +4,75 @@ import NoBooks from "@/components/Home/NoBooks";
 import PaginationWrapper from "@/components/PaginationWrapper";
 import { prisma } from "@/util/Prisma";
 import type { booksHave } from "@prisma/client";
-import React from "react";
+import React, { Suspense } from "react";
 import Pagination from "./Pagination";
 import { GetTheSession } from "@/util/GetTheSession";
 import { toast } from "sonner";
 import { handleClientError } from "@/util/clientError";
+import BookList from "@/components/Home/BookList";
+import BookListSkeleton from "@/components/Home/BookListSkeleton";
 
 async function Page({ searchParams }:{searchParams: Promise< {page:string,room:string}>}) {
   const session = await GetTheSession();
   
   console.log(await searchParams,"search params")
   const Page=Number((await searchParams).page)
-  const roomId=Number((await searchParams).room
-)
+  const roomId=Number((await searchParams).room)
 
-let books;
+  // ---------------------------------------------------------------------------
+  // OLD CODE (Moved to BookList.tsx for Granular Loading / Suspense)
+  // ---------------------------------------------------------------------------
+  /*
+  let books;
 
-try {
-     books = await prisma.booksHave.findMany({
+  try {
+       books = await prisma.booksHave.findMany({
+      where: {
+        ownerId: {
+          not: session?.user.id,
+        },
+        room: {
+          some: {
+            roomId: roomId,
+          },
+        },
+      },
+  
+      skip: Number((await searchParams).room) * 8 - 8,
+      take: 8,
+    });
+    const totalRow = await prisma.booksHave.count({
+      where: {
+        ownerId: {
+          not: session?.user.id,
+        },
+        room: {
+          some: {
+            roomId: Number((await searchParams).room),
+          },
+        },
+      },
+    });
+    
+  } catch (error) {
+    handleClientError(error)
+  }
+
+  if (books.length == 0) {
+    return (
+      <CenterComponent>
+        <NoBooks />
+      </CenterComponent>
+    );
+  }
+  */
+
+  // We still need 'totalRow' for pagination, so we fetch count here (fast query) 
+  // or we could move pagination into the Suspense boundary too. 
+  // For now, keeping it here as it wasn't explicitly requested to move pagination.
+  // HOWEVER, since 'books' query is gone, we re-fetch 'totalRow' locally 
+  // or acknowledge that Pagination might render before list logic.
+   const totalRow = await prisma.booksHave.count({
     where: {
       ownerId: {
         not: session?.user.id,
@@ -32,49 +83,19 @@ try {
         },
       },
     },
-
-    skip: Number((await searchParams).room) * 8 - 8,
-    take: 8,
   });
-  const totalRow = await prisma.booksHave.count({
-    where: {
-      ownerId: {
-        not: session?.user.id,
-      },
-      room: {
-        some: {
-          roomId: Number((await searchParams).room),
-        },
-      },
-    },
-  });
-  
-} catch (error) {
-  handleClientError(error)
-  
-}
-  
-
-
-  if (books.length == 0) {
-    return (
-      <CenterComponent>
-        <NoBooks />
-      </CenterComponent>
-    );
-  }
 
   return (
     <>
-      <CenterComponent className="flex justify-center items-center">
-        <div className=" grid-cols-1 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 ">
-          {books.map((book) => (
-            <div key={book.id}>
-              <HomeCard {...book} />
-            </div>
-          ))}
-        </div>
-      </CenterComponent>
+      {/* 
+        HYBRID LOADING STRATEGY:
+        Restored <Suspense> so the Pagination and Layout load instantly.
+        Only the BookList shows the skeleton.
+      */}
+      <Suspense fallback={<BookListSkeleton />}>
+        <BookList searchParams={searchParams} />
+      </Suspense>
+
       <Pagination
         pageNumber={Page}
         totalPages={Math.ceil(totalRow / 8)}
