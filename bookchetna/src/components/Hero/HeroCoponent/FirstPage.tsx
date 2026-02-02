@@ -1,15 +1,21 @@
 import { Button } from "@/components/ui/button";
-import { GetTheSession } from "@/util/GetTheSession";
 import { Sparkle } from "lucide-react";
 import Image from "next/image";
-import ManagingDiffrentButton from "./ManagingDiffrentButton";
-import React from "react";
+import React, { Suspense } from "react";
+import AuthButtons from "./AuthButtons";
+import AuthButtonSkeleton from "./AuthButtonSkeleton";
 
 
+/**
+ * FirstPage (Server Component)
+ * 
+ * I have removed 'await GetTheSession()' from here.
+ * 
+ * BEFORE: This function was blocked until the session was fetched.
+ * AFTER: This function renders the Layout, Text, and Images immediately.
+ * The "AuthButtons" are wrapped in <Suspense>, so they load independently.
+ */
 async function FirstPage() {
-  
-  const session = await GetTheSession();
-
   return (
     <div className="flex flex-wrap min-h-screen max-w-7xl mx-auto justify-evenly items-center p-4 sm:px-20 py-10">
       
@@ -35,7 +41,14 @@ async function FirstPage() {
           income stream.
         </p>
 
-        <ManagingDiffrentButton session={session!} />
+        {/* 
+          🌟 SUSPENSE MAGIC:
+          'fallback' is what shows while 'AuthButtons' is busy awaiting the session.
+          The rest of the page (everything above and below) shows up INSTANTLY.
+        */}
+        <Suspense fallback={<AuthButtonSkeleton />}>
+           <AuthButtons />
+        </Suspense>
       </div>
 
       {/* RIGHT SECTION (IMAGE) */}
