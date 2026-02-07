@@ -17,6 +17,7 @@ async function Page({ searchParams }:{searchParams: Promise< {page:string,room:s
   
   console.log(await searchParams,"search params")
   const Page=Number((await searchParams).page)
+  console.log(Page)
   const roomId=Number((await searchParams).room)
 
   // ---------------------------------------------------------------------------
@@ -92,9 +93,7 @@ async function Page({ searchParams }:{searchParams: Promise< {page:string,room:s
         Restored <Suspense> so the Pagination and Layout load instantly.
         Only the BookList shows the skeleton.
       */}
-      <Suspense fallback={<BookListSkeleton />}>
         <BookList searchParams={searchParams} />
-      </Suspense>
 
       <Pagination
         pageNumber={Page}
