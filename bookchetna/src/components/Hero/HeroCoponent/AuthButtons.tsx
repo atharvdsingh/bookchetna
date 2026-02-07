@@ -14,10 +14,7 @@ import React from "react";
  */
 async function AuthButtons() {
   // This 'await' will trigger the Suspense fallback in the parent.
-  const promise=new Promise((resolve)=>setTimeout(resolve,10000))
-  await promise.then(()=>{
-    console.log("Session loaded")
-  })
+
   const session = await GetTheSession();
 
   // Once the session is ready, we render the actual buttons (Client Component).

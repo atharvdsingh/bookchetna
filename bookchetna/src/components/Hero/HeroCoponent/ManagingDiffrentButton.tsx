@@ -25,7 +25,7 @@ function ManagingDiffrentButton(props: Props) {
   const handleONclick = (e: React.FormEvent) => {
     setloading(true);
     e.preventDefault();
-    signIn("google" ,{callbackUrl:"/home/page=1"} );
+    signIn("google" ,{callbackUrl:"/room"} );
   };
 
   return (

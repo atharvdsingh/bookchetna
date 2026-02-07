@@ -37,7 +37,7 @@ export const authOptions: NextAuthOptions = {
 
         return true;
       } catch (error) {
-        console.error("❌ signIn error:", error);
+        console.error("signIn error:", error);
         return false;
       }
     },
@@ -66,12 +66,12 @@ export const authOptions: NextAuthOptions = {
             });
           }
 
-          token.id = String(dbUser.id); // ✅ your real Prisma user ID
+          token.id = String(dbUser.id); 
         }
 
         return token;
       } catch (error) {
-        console.error("❌ jwt callback error:", error);
+        console.error("jwt callback error:", error);
         return token;
       }
     },
